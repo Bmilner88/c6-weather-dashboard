@@ -1,1 +1,1 @@
-# c6-weather-dashboard
+# Weather Dashboard
