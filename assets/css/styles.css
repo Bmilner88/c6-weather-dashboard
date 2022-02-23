@@ -1,7 +1,17 @@
-/* body {
+:root {
+    --A: #2B6B51;
+    --B: #A7EED1;
+    --C: #5FEBB4;
+    --D: #4B6B5E;
+    --E: #49B88C;
+}
 
-} */
+body {
+    font-family: 'Open Sans', sans-serif;
+}
 
 .hero {
-    background-color: #76F6CD;
+    background-color: var(--B);
+    text-align: center;
+    padding: 1%;
 }
