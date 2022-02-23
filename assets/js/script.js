@@ -1,9 +1,10 @@
-let currentWeatherEl = document.getElementById('#current-weather');
-let searchFormEl = document.getElementById('#search-form')
-let searchBtnEl = document.getElementById('#search-btn');
+let currentWeatherEl = document.querySelector('#current-weather');
+let searchFormEl = document.querySelector('#search-form')
+//let searchBtnEl = document.querySelector('#search-btn');
 
-function getCurrentWeather() {
-    console.log('test');
+function getCurrentWeather(event) {
+    event.preventDefault();
+    
 };
 
-searchFormEl.addEventListener('submit', getCurrentWeather)
+searchFormEl.addEventListener('submit', getCurrentWeather);
