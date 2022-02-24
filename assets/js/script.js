@@ -11,7 +11,7 @@ let historyList = [];
 function searchSubmitHandler(event) {
     event.preventDefault();
     
-    let cityInput = citySearchInput.value.trim();
+    let cityInput = citySearchInput.value.trim().toLowerCase();
     
     if(cityInput) {
         getCurrentWeather(cityInput);
@@ -72,19 +72,17 @@ function addHistory(city) {
     // temporary object to add to historyList array
     let tempCity = {city: city.name};
 
-    /* if(historyList) {
-        for(i = 0; i < historyList.length; i++) {
-            if(tempCity.city = historyList[i].city) {
-                console.log('duplicate found!');
-                historyList.splice(historyList[i]);
-            } 
+    historyList.forEach(function(item, index) {
+        if(item.city === tempCity.city) {
+            //debugger;
+            console.log(`duplicate found! -- ${item.city}, ${tempCity.city}`);
+            //historyList.push(item[index]);
+            /* historyList.push(historyList.splice(item[index], 1)[0]);
+            historyList.shift(); */
         };
-    }
-    else {
-        historyList.unshift(tempCity);
-    }; */
+    });
+
     historyList.unshift(tempCity);
-    console.log(tempCity.city, historyList[0].city)
 
     localStorage.setItem('weatherHistory', JSON.stringify(historyList));
 
