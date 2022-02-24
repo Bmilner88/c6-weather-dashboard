@@ -72,7 +72,19 @@ function addHistory(city) {
     // temporary object to add to historyList array
     let tempCity = {city: city.name};
 
+    /* if(historyList) {
+        for(i = 0; i < historyList.length; i++) {
+            if(tempCity.city = historyList[i].city) {
+                console.log('duplicate found!');
+                historyList.splice(historyList[i]);
+            } 
+        };
+    }
+    else {
+        historyList.unshift(tempCity);
+    }; */
     historyList.unshift(tempCity);
+    console.log(tempCity.city, historyList[0].city)
 
     localStorage.setItem('weatherHistory', JSON.stringify(historyList));
 
