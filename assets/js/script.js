@@ -72,20 +72,18 @@ function addHistory(city) {
     // temporary object to add to historyList array
     let tempCity = {city: city.name};
 
-    historyList.forEach(function(item, index) {
-        if(item.city === tempCity.city) {
-            //debugger;
-            console.log(`duplicate found! -- ${item.city}, ${tempCity.city}`);
-            //historyList.push(item[index]);
-            /* historyList.push(historyList.splice(item[index], 1)[0]);
-            historyList.shift(); */
-        };
+    // remove duplicate items
+    historyList = historyList.filter(function(i) {
+        return i.city != tempCity.city;
     });
 
+    // add new item
     historyList.unshift(tempCity);
 
+    // save to localStorage
     localStorage.setItem('weatherHistory', JSON.stringify(historyList));
 
+    // get the items from localStorage
     getHistory();
 };
 
