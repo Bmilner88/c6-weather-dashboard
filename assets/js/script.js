@@ -49,15 +49,12 @@ function getCurrentWeather(city) {
 function displayWeather(city) {
         createDiv.classList = '';
         createH2.textContent = '';
-        let temp = city.dt.toString();
-        let date = new Date(temp);
 
         createDiv.classList = 'card mt-5';
-        createH2.textContent = `${city.name} (${date.toDateString()})`;
+        createH2.textContent = `${city.name} ()`;
 
         createDiv.appendChild(createH2);
         currentWeatherEl.append(createDiv);
-        console.log(temp)
 };
 
 /* function addHistory(city) {
