@@ -6,6 +6,8 @@ let historyListEL = document.querySelector('#history-buttons');
 let createDiv = document.createElement('div');
 let createH2 = document.createElement('h2');
 
+let historyList = [];
+
 function searchSubmitHandler(event) {
     event.preventDefault();
     
@@ -23,7 +25,7 @@ function historyClickHandler(event) {
     let city = event.target.getAttribute('data-city');
 
     if(city) {
-        getCurrentWeather(city);
+        currentWeather(city);
     };
 };
 
@@ -34,7 +36,8 @@ function getCurrentWeather(city) {
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
-                    displayWeather(data);
+                    setCurrentWeather(data);
+                    getFiveDayWeather(data);
                 });
             }
             else {
@@ -46,29 +49,46 @@ function getCurrentWeather(city) {
         });
 };
 
-function displayWeather(city) {
-        createDiv.classList = '';
-        createH2.textContent = '';
+function setCurrentWeather(city) {
+    let date = moment().format('L');
 
-        createDiv.classList = 'card mt-5';
-        createH2.textContent = `${city.name} ()`;
+    createDiv.classList = '';
+    createH2.textContent = '';
 
-        createDiv.appendChild(createH2);
-        currentWeatherEl.append(createDiv);
+    createDiv.classList = 'mt-5';
+    createH2.textContent = `${city.name} (${date})`;
+
+    createDiv.appendChild(createH2);
+    currentWeatherEl.append(createDiv);
+
+    addHistory(city);
 };
 
-/* function addHistory(city) {
-    if(city.getAttribute('data-city')) {
-        let btn = document.createElement('button');
-        //let liId = document.querySelector(`#${city.name.toLowerCase()}`);
+function getFiveDayWeather(city) {
+    //console.log('fivedaytest')
+};
 
-        btn.textContent = city.name;
-        btn.classList = 'btn btn-dark col-12 mb-3';
-        btn.setAttribute('data-city', city.name.toLowerCase())
+function addHistory(city) {
+    let tempCity = {city: city.name};
+    historyList.push(tempCity);
+    localStorage.setItem('weatherHistory', JSON.stringify(historyList));
+    getHistory();
+};
 
-        historyListEL.append(btn);
+function getHistory() {
+    historyList = [];
+
+    let tempHistory = JSON.parse(localStorage.getItem('weatherHistory'));
+    
+    if(tempHistory) {
+        for(i = 0; i < tempHistory.length; i++) {
+            historyList.push(tempHistory[i]);
+        };
     };
-}; */
+    console.log(historyList);
+}
 
 searchFormEl.addEventListener('submit', searchSubmitHandler);
-historyListEL.addEventListener('click', historyClickHandler);
+//historyListEL.addEventListener('click', historyClickHandler);
+
+getHistory();

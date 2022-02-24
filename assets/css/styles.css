@@ -33,6 +33,8 @@ body {
 .hero {
     text-align: center;
     padding: 1%;
+    background-image: linear-gradient(to right, var(--E), var(--A));
+    color:#2a2b2a;
 }
 
 .card-header {
