@@ -25,7 +25,7 @@ function historyClickHandler(event) {
     let city = event.target.getAttribute('data-city');
 
     if(city) {
-        currentWeather(city);
+        getCurrentWeather(city);
     };
 };
 
@@ -69,26 +69,48 @@ function getFiveDayWeather(city) {
 };
 
 function addHistory(city) {
+    // temporary object to add to historyList array
     let tempCity = {city: city.name};
-    historyList.push(tempCity);
+
+    historyList.unshift(tempCity);
+
     localStorage.setItem('weatherHistory', JSON.stringify(historyList));
+
     getHistory();
 };
 
 function getHistory() {
+    // reset historyList array
     historyList = [];
 
+    // pull from localStorage
     let tempHistory = JSON.parse(localStorage.getItem('weatherHistory'));
     
+    // push items from localStorage to historyList array
     if(tempHistory) {
         for(i = 0; i < tempHistory.length; i++) {
             historyList.push(tempHistory[i]);
         };
     };
-    console.log(historyList);
-}
+
+    if(historyList) {
+        // reset buttons so it doesn't add over the amount in the list array
+        historyListEL.textContent = '';
+
+        // create buttons for each item in the array
+        for(i = 0; i < historyList.length; i++) {
+            let btn = document.createElement('button');
+            
+            btn.textContent = historyList[i].city;
+            btn.classList = 'btn btn-dark col-12 mb-3';
+            btn.setAttribute('data-city',  historyList[i].city.toLowerCase().trim());
+
+            historyListEL.append(btn);
+        };
+    };
+};
 
 searchFormEl.addEventListener('submit', searchSubmitHandler);
-//historyListEL.addEventListener('click', historyClickHandler);
+historyListEL.addEventListener('click', historyClickHandler);
 
 getHistory();
