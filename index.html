@@ -12,15 +12,15 @@
     <link href="./assets/css/styles.css" rel="stylesheet" />
     <title>Weather Dashboard</title>
 </head>
-<body class="flex-column min-100-vh">
+<body class="flex-column">
     <header class="hero">
-        <h1 class="header-title">Weather Dashboard <i class="bi bi-cloud"></i></h1>
+        <h1 class="header-title col">Weather Dashboard <i class="bi bi-cloud"></i></h1>
       </header>
     
       <main>
-            <div class="container min-vw-100 m-5">
+            <div class="container mt-5 min-100-vh align-content-center">
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col">
                         <form id="search-form" class="card">
                             <div class="card-body">
                                 <h4 class="card-title text-center">Search for a city</h4>
@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-8">
+                    <div class="col">
                         <div id="current-weather">
                             <div class="mb-5">
                                 <h2 id="city-title"></h2>
@@ -53,13 +53,14 @@
                         </div>
                         <div class="container">
                             <h3 class="mt-5" id="five-day-text"></h3>
-                            <div class="row justify-content-around align-items-center" id="five-day">
+                            <div class="" id="five-day">
                                 
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <footer class="mt-5"></footer>
       </main>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

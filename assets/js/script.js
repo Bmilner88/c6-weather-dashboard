@@ -16,7 +16,6 @@ let humidityLi = document.getElementById('humidity');
 let uvIndexLi = document.getElementById('uv-index');
 
 let historyList = [];
-let color = 'primary';
 
 function searchSubmitHandler(event) {
     event.preventDefault();
@@ -72,7 +71,20 @@ function getUVIndex(lat, lon) {
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
-                   uvIndexLi.innerText = `UV Index: ${data.current.uvi}`
+                    let uvi = data.current.uvi;
+                    let color;
+
+                    if(uvi <= 3) {
+                        color = 'success';
+                    }
+                    else if((uvi >= 3) && (uvi <= 7)) {
+                        color = 'warning';
+                    }
+                    else {
+                        color = 'danger';
+                    };
+
+                   uvIndexLi.innerHTML = `<span class="rounded bg-${color}">UV Index: ${uvi}</span>`
                 });
             };
         })
@@ -180,23 +192,19 @@ function getIcon(city) {
     let condition = city.weather[0].main.toLowerCase(); 
     switch(condition) {
         case 'thunderstorm':
-            return '<i class="bi bi-cloud-lightning-fill"> Thunderstorm </i>';
-            break;
+            return '<i class="bi bi-cloud-lightning-fill"> Thunderstorm</i>';
         case 'drizzle':
-            return '<i class="bi bi-cloud-rain-fill"> Drizzle </i>';
-            break;
+            return '<i class="bi bi-cloud-rain-fill"> Drizzle</i>';
         case 'rain':
-            return '<i class="bi bi-cloud-rain-heavy-fill"> Rain </i>';
-            break;
+            return '<i class="bi bi-cloud-rain-heavy-fill"> Rain</i>';
         case 'snow':
-            return '<i class="bi bi-cloud-snow-fill"> Snow </i>';
-            break;
+            return '<i class="bi bi-cloud-snow-fill"> Snow</i>';
         case 'clear':
-            return '<i class="bi bi-brightness-high-fill"> Clear </i>';
-            break;
+            return '<i class="bi bi-brightness-high-fill"> Clear</i>';
         case 'clouds':
-            return '<i class="bi bi-clouds-fill"> Clouds </i>';
-            break;
+            return '<i class="bi bi-clouds-fill"> Clouds</i>';
+        default:
+            return '<i class="bi bi-brightness-high-fill"> ?</i>';
     };
 };
 
