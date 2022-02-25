@@ -1,5 +1,7 @@
 let currentWeatherEl = document.querySelector('#current-weather');
+let uvIndexLi = document.querySelector('#uv-index');
 let fiveDayWeatherEl = document.querySelector('#five-day');
+let fiveDayTextEl = document.querySelector('#five-day-text');
 let searchFormEl = document.querySelector('#search-form')
 let citySearchInput = document.querySelector('#city');
 let historyListEL = document.querySelector('#history-buttons');
@@ -8,6 +10,10 @@ let createDiv = document.createElement('div');
 let createH2 = document.createElement('h2');
 
 let historyList = [];
+let uvIndex;
+let color = 'primary';
+let lat;
+let lon;
 
 function searchSubmitHandler(event) {
     event.preventDefault();
@@ -30,46 +36,63 @@ function historyClickHandler(event) {
     };
 };
 
-function getCurrentWeather(city) {  
+function getCurrentWeather(city) {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
                     setCurrentWeather(data);
-                    
+                    lat = data.coord.lat;
+                    lon = data.coord.lon;
+                    fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
+                        .then(function(response) {
+                            if(response.ok) {
+                                response.json().then(function(data) {
+                                    getUVIndex(data);
+                                });
+                            };
+                        })
+                    .catch(function(error) {
+                        alert('Unable to connect to OpenWeather');
+                    }
+                );
                 });
-            }
-            else {
-                alert('Error: city not found');
             };
         })
         .catch(function(error) {
             alert('Unable to connect to OpenWeather');
-        });
-        
-
+        }
+    );
+    
     fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
                     getFiveDayWeather(data);
                 });
-            }
-            else {
-                alert('Error: city not found');
             };
         })
         .catch(function(error) {
             alert('Unable to connect to OpenWeather');
-    });
+        }
+    );
+
+    
 };
 
 function setCurrentWeather(city) {
     let date = moment().format('L');
-
     let htmlText = 
-    `<div class="mt-5">
-        <h2>${city.name} (${date})</h2>
+    `<div class="mb-5">
+        <h2>${city.name} (${date}) ${getIcon(city)}</h2>
+        <ul id="current-list" class="ml-3 ">
+                <li>Temp: ${city.main.temp}°</li>
+                <li>Wind Speed: ${city.wind.speed}mph</li>
+                <li>Humidity: ${city.main.humidity}</li>
+                <li>UV Index: ${uvIndex};</li>
+        </ul>
+
+        
     </div>`;
 
     currentWeatherEl.innerHTML = htmlText;
@@ -82,12 +105,32 @@ function getFiveDayWeather(city) {
     
     let htmlText = '';
     for(i = 0; i < forecast.length; i += 8) {
+        // pull and format date for 5-day cards
+        let date = forecast[i].dt_txt;
+        year = date.slice(0, 4);
+        date = date.slice(0, -9).substring(5).replace('-', '/').concat('/', year);
+
+        // set the html for the 5-day cards
         htmlText += 
-        `<div class="card">
-            <h2>${forecast[i].dt_txt}</h2>
+        `<div class="card mt-5">
+            <h4 class="card-title text-center mt-3">${date} ${getIcon(forecast[i])}</h4>
+            <ul class="card-body ml-3">
+                <li>Temp: ${forecast[i].main.temp}°</li>
+                <li>Wind Speed: ${forecast[i].wind.speed}mph</li>
+                <li>Humidity: ${forecast[i].main.humidity}</li>
+            </ul>
         </div>`
+        fiveDayTextEl.textContent = '5-Day Forecast: ';
         fiveDayWeatherEl.innerHTML = htmlText;
-    }
+    };
+};
+
+function getUVIndex(city) {
+    console.log(city);
+    uvIndex = city.current.uvi;
+
+    console.log(uvIndex)
+    //uvIndexLi.textContent = htmlText;
 };
 
 function addHistory(city) {
@@ -137,6 +180,30 @@ function getHistory() {
 
             historyListEL.append(btn);
         };
+    };
+};
+
+function getIcon(city) {
+    let condition = city.weather[0].main.toLowerCase(); 
+    switch(condition) {
+        case 'thunderstorm':
+            return '<i class="bi bi-cloud-lightning-fill"></i>';
+            break;
+        case 'drizzle':
+            return '<i class="bi bi-cloud-rain-fill"></i>';
+            break;
+        case 'rain':
+            return '<i class="bi bi-cloud-rain-heavy-fill"></i>';
+            break;
+        case 'snow':
+            return '<i class="bi bi-cloud-snow-fill"></i>';
+            break;
+        case 'clear':
+            return '<i class="bi bi-brightness-high-fill"></i>';
+            break;
+        case 'clouds':
+            return '<i class="bi bi-clouds-fill"></i>';
+            break;
     };
 };
 
