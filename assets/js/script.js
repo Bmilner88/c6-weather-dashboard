@@ -31,10 +31,7 @@ function historyClickHandler(event) {
 };
 
 function getCurrentWeather(city) {  
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`;
-    let fApiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`;
-
-    fetch(apiUrl)
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
@@ -51,7 +48,7 @@ function getCurrentWeather(city) {
         });
         
 
-    fetch(fApiUrl)
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
