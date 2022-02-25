@@ -91,7 +91,6 @@ function setCurrentWeather(city) {
                 <li>Humidity: ${city.main.humidity}</li>
                 <li>UV Index: ${uvIndex};</li>
         </ul>
-
         
     </div>`;
 
