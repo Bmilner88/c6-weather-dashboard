@@ -1,4 +1,5 @@
 let currentWeatherEl = document.querySelector('#current-weather');
+let fiveDayWeatherEl = document.querySelector('#five-day');
 let searchFormEl = document.querySelector('#search-form')
 let citySearchInput = document.querySelector('#city');
 let historyListEL = document.querySelector('#history-buttons');
@@ -29,15 +30,16 @@ function historyClickHandler(event) {
     };
 };
 
-function getCurrentWeather(city) {
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=a72b9c777fb2cf77143a024a443dde88`;
+function getCurrentWeather(city) {  
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`;
+    let fApiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`;
 
     fetch(apiUrl)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
                     setCurrentWeather(data);
-                    getFiveDayWeather(data);
+                    
                 });
             }
             else {
@@ -47,25 +49,48 @@ function getCurrentWeather(city) {
         .catch(function(error) {
             alert('Unable to connect to OpenWeather');
         });
+        
+
+    fetch(fApiUrl)
+        .then(function(response) {
+            if(response.ok) {
+                response.json().then(function(data) {
+                    getFiveDayWeather(data);
+                });
+            }
+            else {
+                alert('Error: city not found');
+            };
+        })
+        .catch(function(error) {
+            alert('Unable to connect to OpenWeather');
+    });
 };
 
 function setCurrentWeather(city) {
     let date = moment().format('L');
 
-    createDiv.classList = '';
-    createH2.textContent = '';
+    let htmlText = 
+    `<div class="mt-5">
+        <h2>${city.name} (${date})</h2>
+    </div>`;
 
-    createDiv.classList = 'mt-5';
-    createH2.textContent = `${city.name} (${date})`;
-
-    createDiv.appendChild(createH2);
-    currentWeatherEl.append(createDiv);
+    currentWeatherEl.innerHTML = htmlText;
 
     addHistory(city);
 };
 
 function getFiveDayWeather(city) {
-    //console.log('fivedaytest')
+    let forecast = city.list;
+    
+    let htmlText = '';
+    for(i = 0; i < forecast.length; i += 8) {
+        htmlText += 
+        `<div class="card">
+            <h2>${forecast[i].dt_txt}</h2>
+        </div>`
+        fiveDayWeatherEl.innerHTML = htmlText;
+    }
 };
 
 function addHistory(city) {
