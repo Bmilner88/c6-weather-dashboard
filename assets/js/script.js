@@ -1,10 +1,17 @@
-let currentWeatherEl = document.querySelector('#current-weather');
+let fiveDayWeatherEl = document.querySelector('#five-day');
+let fiveDayTextEl = document.querySelector('#five-day-text');
 let searchFormEl = document.querySelector('#search-form')
 let citySearchInput = document.querySelector('#city');
 let historyListEL = document.querySelector('#history-buttons');
 
 let createDiv = document.createElement('div');
 let createH2 = document.createElement('h2');
+
+let cityTitle = document.getElementById('city-title');
+let tempLi = document.getElementById('temp');
+let windSpeedLi = document.getElementById('wind-speed');
+let humidityLi = document.getElementById('humidity');
+let uvIndexLi = document.getElementById('uv-index');
 
 let historyList = [];
 
@@ -30,43 +37,114 @@ function historyClickHandler(event) {
 };
 
 function getCurrentWeather(city) {
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=a72b9c777fb2cf77143a024a443dde88`;
-
-    fetch(apiUrl)
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
                     setCurrentWeather(data);
-                    getFiveDayWeather(data);
                 });
-            }
-            else {
-                alert('Error: city not found');
             };
         })
         .catch(function(error) {
             alert('Unable to connect to OpenWeather');
-        });
+        }
+    );
+    
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
+        .then(function(response) {
+            if(response.ok) {
+                response.json().then(function(data) {
+                    getFiveDayWeather(data);
+                });
+            };
+        })
+        .catch(function(error) {
+            alert('Unable to connect to OpenWeather');
+        }
+    );
+};
+
+function getUVIndex(lat, lon) {
+    // pulls response from openweather api
+    fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
+        .then(function(response) {
+            if(response.ok) {
+                response.json().then(function(data) {
+                    // sets the numerical value for the uv index
+                    let uvi = data.current.uvi;
+
+                    let color;
+
+                    // sets the color for the uv index depending on value
+                    if(uvi <= 3) {
+                        // favorable
+                        color = 'success';
+                    }
+                    else if((uvi >= 3) && (uvi <= 5)) {
+                        // moderate
+                        color = 'warning';
+                    }
+                    else {
+                        // severe
+                        color = 'danger';
+                    };
+
+                    // set the uv index text
+                    uvIndexLi.innerHTML = `<span class="rounded bg-${color}">UV Index: ${uvi}</span>`
+                });
+            };
+        })
+        .catch(function(error) {
+            alert('Unable to connect to OpenWeather');
+        }
+    );
 };
 
 function setCurrentWeather(city) {
+    // sets the current date
     let date = moment().format('L');
 
-    createDiv.classList = '';
-    createH2.textContent = '';
+    // adds the current weather to the page
+    cityTitle.innerHTML = `${city.name} (${date}) ${getIcon(city)}`;
+    tempLi.innerText = `Temp: ${city.main.temp}°`;
+    windSpeedLi.innerText = `Wind Speed: ${city.wind.speed}mph`;
+    humidityLi.innerText = `Humidity: ${city.main.humidity}`;
 
-    createDiv.classList = 'mt-5';
-    createH2.textContent = `${city.name} (${date})`;
+    // gets the uv index
+    getUVIndex(city.coord.lat, city.coord.lon);
 
-    createDiv.appendChild(createH2);
-    currentWeatherEl.append(createDiv);
-
+    // adds to localstorage
     addHistory(city);
 };
 
+
+
 function getFiveDayWeather(city) {
-    //console.log('fivedaytest')
+    let forecast = city.list;
+    
+    let htmlText = '';
+    for(i = 0; i < forecast.length; i += 8) {
+        // pull and format date for 5-day cards
+        let date = forecast[i].dt_txt;
+        year = date.slice(0, 4);
+        date = date.slice(0, -9).substring(5).replace('-', '/').concat('/', year);
+
+        // set the html for the 5-day cards
+        htmlText += 
+        `<div class="card mt-5">
+            <h4 class="card-title text-center m-3">${date} ${getIcon(forecast[i])}</h4>
+            <ul class="card-body ml-3">
+                <li>Temp: ${forecast[i].main.temp}°</li>
+                <li>Wind Speed: ${forecast[i].wind.speed}mph</li>
+                <li>Humidity: ${forecast[i].main.humidity}</li>
+            </ul>
+        </div>`
+        fiveDayTextEl.textContent = '5-Day Forecast: ';
+        fiveDayWeatherEl.innerHTML = htmlText;
+    };
 };
+
+
 
 function addHistory(city) {
     // temporary object to add to historyList array
@@ -115,6 +193,29 @@ function getHistory() {
 
             historyListEL.append(btn);
         };
+    };
+};
+
+function getIcon(city) {
+    // gets the current conditions
+    let condition = city.weather[0].main.toLowerCase(); 
+
+    // sets bootstrap icon according to the conditions
+    switch(condition) {
+        case 'thunderstorm':
+            return '<i class="bi bi-cloud-lightning-fill"> Thunderstorm</i>';
+        case 'drizzle':
+            return '<i class="bi bi-cloud-rain-fill"> Drizzle</i>';
+        case 'rain':
+            return '<i class="bi bi-cloud-rain-heavy-fill"> Rain</i>';
+        case 'snow':
+            return '<i class="bi bi-cloud-snow-fill"> Snow</i>';
+        case 'clear':
+            return '<i class="bi bi-brightness-high-fill"> Clear</i>';
+        case 'clouds':
+            return '<i class="bi bi-clouds-fill"> Clouds</i>';
+        default:
+            return '<i class="bi bi-brightness-high-fill"> ?</i>';
     };
 };
 

@@ -10,26 +10,6 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-.bg-a {
-    background-color: var(--A);
-}
-
-.bg-b {
-    background-color: var(--B);
-}
-
-.bg-c {
-    background-color: var(--C);
-}
-
-.bg-d {
-    background-color: var(--D);
-}
-
-.bg-e {
-    background-color: var(--E);
-}
-
 .hero {
     text-align: center;
     padding: 1%;
