@@ -10,8 +10,34 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-.hero {
+.bg-a {
+    background-color: var(--A);
+}
+
+.bg-b {
     background-color: var(--B);
+}
+
+.bg-c {
+    background-color: var(--C);
+}
+
+.bg-d {
+    background-color: var(--D);
+}
+
+.bg-e {
+    background-color: var(--E);
+}
+
+.hero {
     text-align: center;
     padding: 1%;
+    background-image: linear-gradient(to right, var(--E), var(--A));
+    color:#2a2b2a;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: none;
 }
