@@ -7,9 +7,7 @@ let historyListEL = document.querySelector('#history-buttons');
 let createDiv = document.createElement('div');
 let createH2 = document.createElement('h2');
 
-let currentWeatherEl = document.querySelector('#current-weather');
 let cityTitle = document.getElementById('city-title');
-let currentUl = document.getElementById('current-list');
 let tempLi = document.getElementById('temp');
 let windSpeedLi = document.getElementById('wind-speed');
 let humidityLi = document.getElementById('humidity');
@@ -67,24 +65,32 @@ function getCurrentWeather(city) {
 };
 
 function getUVIndex(lat, lon) {
+    // pulls response from openweather api
     fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
+                    // sets the numerical value for the uv index
                     let uvi = data.current.uvi;
+
                     let color;
 
+                    // sets the color for the uv index depending on value
                     if(uvi <= 3) {
+                        // favorable
                         color = 'success';
                     }
-                    else if((uvi >= 3) && (uvi <= 7)) {
+                    else if((uvi >= 3) && (uvi <= 5)) {
+                        // moderate
                         color = 'warning';
                     }
                     else {
+                        // severe
                         color = 'danger';
                     };
 
-                   uvIndexLi.innerHTML = `<span class="rounded bg-${color}">UV Index: ${uvi}</span>`
+                    // set the uv index text
+                    uvIndexLi.innerHTML = `<span class="rounded bg-${color}">UV Index: ${uvi}</span>`
                 });
             };
         })
@@ -95,17 +101,19 @@ function getUVIndex(lat, lon) {
 };
 
 function setCurrentWeather(city) {
+    // sets the current date
     let date = moment().format('L');
 
+    // adds the current weather to the page
     cityTitle.innerHTML = `${city.name} (${date}) ${getIcon(city)}`;
     tempLi.innerText = `Temp: ${city.main.temp}°`;
     windSpeedLi.innerText = `Wind Speed: ${city.wind.speed}mph`;
     humidityLi.innerText = `Humidity: ${city.main.humidity}`;
 
-    //currentWeatherEl.innerHTML = htmlText;
-
+    // gets the uv index
     getUVIndex(city.coord.lat, city.coord.lon);
 
+    // adds to localstorage
     addHistory(city);
 };
 
@@ -189,7 +197,10 @@ function getHistory() {
 };
 
 function getIcon(city) {
+    // gets the current conditions
     let condition = city.weather[0].main.toLowerCase(); 
+
+    // sets bootstrap icon according to the conditions
     switch(condition) {
         case 'thunderstorm':
             return '<i class="bi bi-cloud-lightning-fill"> Thunderstorm</i>';
