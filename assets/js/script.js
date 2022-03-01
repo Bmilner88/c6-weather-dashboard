@@ -1,7 +1,3 @@
-require('dotenv').config();
-
-const auth_token = process.env.AUTH_TOKEN;
-
 let fiveDayWeatherEl = document.querySelector('#five-day');
 let fiveDayTextEl = document.querySelector('#five-day-text');
 let searchFormEl = document.querySelector('#search-form')
