@@ -1,3 +1,7 @@
+require('dotenv').config();
+
+const auth_token = process.env.AUTH_TOKEN;
+
 let fiveDayWeatherEl = document.querySelector('#five-day');
 let fiveDayTextEl = document.querySelector('#five-day-text');
 let searchFormEl = document.querySelector('#search-form')
@@ -37,7 +41,7 @@ function historyClickHandler(event) {
 };
 
 function getCurrentWeather(city) {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${auth_token}`)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
@@ -50,7 +54,7 @@ function getCurrentWeather(city) {
         }
     );
     
-    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=${auth_token}`)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
@@ -66,7 +70,7 @@ function getCurrentWeather(city) {
 
 function getUVIndex(lat, lon) {
     // pulls response from openweather api
-    fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=a72b9c777fb2cf77143a024a443dde88`)
+    fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${auth_token}`)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
