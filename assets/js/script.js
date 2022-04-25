@@ -1,3 +1,5 @@
+let API_KEY = process.env.API_KEY;
+
 let fiveDayWeatherEl = document.querySelector('#five-day');
 let fiveDayTextEl = document.querySelector('#five-day-text');
 let searchFormEl = document.querySelector('#search-form')
