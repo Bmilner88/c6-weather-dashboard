@@ -1,0 +1,30 @@
+{
+  "name": "c6-weather-dashboard",
+  "version": "1.0.0",
+  "description": "Basic Weather Dashboard using the server-side API - OpenWeather.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bmilner88/c6-weather-dashboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bmilner88/c6-weather-dashboard/issues"
+  },
+  "homepage": "https://github.com/Bmilner88/c6-weather-dashboard#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "node-fetch": "^3.2.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
