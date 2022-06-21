@@ -15,6 +15,8 @@ let uvIndexLi = document.getElementById('uv-index');
 
 let historyList = [];
 
+let API_KEY = '6abd3cc70a43b50a9416fdd499e760a0';
+
 function searchSubmitHandler(event) {
     event.preventDefault();
     
